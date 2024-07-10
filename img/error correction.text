@@ -1,0 +1,46 @@
+////load the playlist when the card is clicked
+
+
+#1. Array.from(document.getElementsByClassName("card")) converts the HTMLCollection to an array, which allows the use of forEach
+eg:
+    Array.from(document.getElementsByClassName("card")).forEach(e=>{
+        e.addEventListener("click", async item=>{
+            songs = await getSongs(`songs/${item.dataset.folder}`);
+
+        })
+    })
+
+    ...................................................
+#2. Accessing Dataset Properly:
+
+item.target.dataset.folder is used to properly access the data-folder attribute from the clicked element. 
+
+eg:
+   Array.from(document.getElementsByClassName("card")).forEach(e => {
+    e.addEventListener("click", async item => {
+        songs = await getSongs(`songs/${item.target.dataset.folder}`);
+    });
+});
+
+
+.....................................................
+#3The difference between item.target.dataset.folder and item.currentTarget.dataset.folder lies in how they refer to the elements involved in the event:
+
+item.target: This refers to the actual element that was clicked. This might be a child element of the one to which the event listener is attached.
+item.currentTarget: This refers to the element to which the event listener is attached. In this case, it would be the .card element. 
+
+Use Cases:
+item.target.dataset.folder: Use this if the data-folder attribute is on the exact element that was clicked. This is useful if you have multiple nested elements within the .card and you want to differentiate actions based on which specific element was clicked.
+item.currentTarget.dataset.folder: Use this if the data-folder attribute is on the .card element itself, regardless of which child element was clicked.
+
+eg:Array.from(document.getElementsByClassName("card")).forEach(e => {
+    e.addEventListener("click", async item => {
+        console.log(e);
+        console.log(item, item.currentTarget.dataset);
+        // Use currentTarget to refer to the .card element
+        songs = await getSongs(`songs/${item.currentTarget.dataset.folder}`);
+    });
+});
+
+Conclusion:
+Using item.currentTarget.dataset.folder is more robust in this context because it consistently refers to the .card element, ensuring that you get the correct data-folder value regardless of which nested element inside the .card was clicked.
